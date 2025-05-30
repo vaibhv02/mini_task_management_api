@@ -49,75 +49,76 @@ The API will be available at `http://localhost:8000`
 Once the server is running, you can access:
 - Swagger UI: `http://localhost:8000/docs`
 
-## Authentication
+## API Endpoints
 
-### 1. Register a New User
-```bash
-curl -X POST "http://localhost:8000/auth/register" \
-     -H "Content-Type: application/json" \
-     -d '{
-         "email": "user@example.com",
-         "password": "yourpassword"
-     }'
-```
+### Authentication Endpoints
 
-### 2. Login
-```bash
-curl -X POST "http://localhost:8000/auth/login" \
-     -H "Content-Type: application/json" \
-     -d '{
-         "email": "user@example.com",
-         "password": "yourpassword"
-     }'
-```
+#### Register a New User
+- **POST** `/auth/register`
+- **Request Body:**
+  ```json
+  {
+    "email": "user@example.com",
+    "password": "yourpassword"
+  }
+  ```
 
-The API will automatically handle authentication for protected endpoints using the provided email and password credentials.
+#### Login
+- **POST** `/auth/login`
+- **Request Body:**
+  ```json
+  {
+    "email": "user@example.com",
+    "password": "yourpassword"
+  }
+  ```
+- **Response:** Returns JWT access token
+  ```json
+  {
+    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "token_type": "bearer"
+  }
+  ```
 
-## Task Management API Examples
+### Authentication
 
-### 1. Create a New Task
-```bash
-curl -X POST "http://localhost:8000/tasks/" \
-     -H "Content-Type: application/json" \
-     -d '{
-         "title": "Complete project documentation",
-         "description": "Write comprehensive API documentation",
-         "status": "pending",
-         "priority": "high"
-     }'
-```
+The API uses FastAPI's built-in OAuth2 password flow for authentication. After logging in, FastAPI automatically handles the authentication for protected endpoints. You don't need to manually include any tokens in your requests.
 
-### 2. List All Tasks
-```bash
-# Get all tasks
-curl -X GET "http://localhost:8000/tasks/"
+### Task Management Endpoints
 
-# Filter tasks by status
-curl -X GET "http://localhost:8000/tasks/?status=pending"
+#### Create a New Task
+- **POST** `/tasks/`
+- **Request Body:**
+  ```json
+  {
+    "title": "Complete project documentation",
+    "description": "Write comprehensive API documentation",
+    "status": "pending",
+    "priority": "high"
+  }
+  ```
 
-# Filter tasks by priority
-curl -X GET "http://localhost:8000/tasks/?priority=high"
-```
+#### List Tasks
+- **GET** `/tasks/`
+- **Query Parameters:**
+  - `status`: Filter by status (pending/in_progress/completed)
+  - `priority`: Filter by priority (low/medium/high)
 
-### 3. Get a Specific Task
-```bash
-curl -X GET "http://localhost:8000/tasks/1"
-```
+#### Get a Specific Task
+- **GET** `/tasks/{task_id}`
 
-### 4. Update a Task
-```bash
-curl -X PUT "http://localhost:8000/tasks/1" \
-     -H "Content-Type: application/json" \
-     -d '{
-         "title": "Updated task title",
-         "status": "completed"
-     }'
-```
+#### Update a Task
+- **PUT** `/tasks/{task_id}`
+- **Request Body:**
+  ```json
+  {
+    "title": "Updated task title",
+    "status": "completed"
+  }
+  ```
 
-### 5. Delete a Task
-```bash
-curl -X DELETE "http://localhost:8000/tasks/1"
-```
+#### Delete a Task
+- **DELETE** `/tasks/{task_id}`
 
 ## Task Model
 
